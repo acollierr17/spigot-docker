@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MINECRAFT_HOME="/home/star/starprison/minecraft"
+MINECRAFT_HOME=$MINECRAFT_HOME
 MINECRAFT_SRC="/usr/src/minecraft"
 MINECRAFT_JAR=$MINECRAFT_HOME/paper-1618.jar
 MINECRAFT_STARTUP_JAR=${MINECRAFT_STARTUP_JAR:-"$MINECRAFT_JAR"}
@@ -133,7 +133,6 @@ case "$1" in
     run)
         shift 1
         check_env
-        build_server
         first_run
         update_permissions
         trap safe_shutdown EXIT
