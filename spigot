@@ -1,14 +1,12 @@
 #!/bin/bash
 
-MINECRAFT_HOME="/opt/minecraft"
+MINECRAFT_HOME="/home/star/starprison/minecraft"
 MINECRAFT_SRC="/usr/src/minecraft"
-MINECRAFT_VERSION=${MINECRAFT_VERSION:-1.8.8}
-MINECRAFT_JAR=${MINECRAFT_JAR:-"spigot-$MINECRAFT_VERSION.jar"}
+MINECRAFT_JAR=$MINECRAFT_HOME/paper-1618.jar
 MINECRAFT_STARTUP_JAR=${MINECRAFT_STARTUP_JAR:-"$MINECRAFT_JAR"}
 MINECRAFT_OPTS=${MINECRAFT_OPTS:-"-server -Xmx1024m -XX:MaxPermSize=256m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC"}
-WORLD_DIR="/var/lib/minecraft"
+WORLD_DIR="/home/star/starprison/worlds"
 
-SPIGOT_BUILDTOOLS_URL=${SPIGOT_BUILDTOOLS_URL:-"https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"}
 TMUX_SESSION=spigot
 
 check_env() {
@@ -25,25 +23,6 @@ check_env() {
     if [ -z "$DEFAULT_OP" ]; then
         >&2 echo "DEFAULT_OP is required. Please set this variable to continue."
         exit 1
-    fi
-}
-
-build_server() {
-    # Compile spigot if it does not exist.
-    if [ ! -f "$MINECRAFT_HOME/$MINECRAFT_JAR" ]; then
-        echo "Building Spigot" && \
-            mkdir -p /tmp/spigot && \
-            curl -S $SPIGOT_BUILDTOOLS_URL -o /tmp/spigot/BuildTools.jar && \
-            pushd /tmp/spigot > /dev/null && \
-            java -jar BuildTools.jar --rev $MINECRAFT_VERSION && \
-            cp /tmp/spigot/craftbukkit-*.jar  /tmp/spigot/spigot-*.jar $MINECRAFT_HOME && \
-            popd > /dev/null && \
-            rm -rf /tmp/spigot
-
-        if [ $? -ne 0 ]; then
-            >&2 echo "Unable to build Spigot."
-            exit 1
-        fi
     fi
 }
 
